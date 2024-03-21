@@ -1,12 +1,12 @@
-import express, { Request, Response, ErrorRequestHandler } from 'express';
-import path from 'path';
-import dotenv from 'dotenv';
 import cors from 'cors';
+import dotenv from 'dotenv';
+import express, { ErrorRequestHandler, Request, Response } from 'express';
+import path from 'path';
 import apiRoutes from './routes/routes';
 
 dotenv.config();
 
-const server = express();
+export const server = express();
 
 server.use(cors());
 
