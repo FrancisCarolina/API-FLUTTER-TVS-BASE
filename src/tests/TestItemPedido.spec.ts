@@ -73,6 +73,24 @@ describe("Teste da Rota getItemDoPedidoById", () => {
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty("message", 'Item do Pedido não encontrado');
   });
+
+  it("Deve retornar um status 400 quando o Id do item não for um número", async () => {
+    const idItem = "abc";
+
+    const response = await request(app).get(`/itensDoPedido/${idItem}`);
+
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty("message", 'Id não é um número' );
+  });
+  it("Deve retornar a lista de itens dentro de um tempo aceitavel", async () => {
+    const start = Date.now();
+    const idItem = 1;
+    const response = await request(app).get(`/itensDoPedido/${idItem}`);
+    const duration = Date.now() - start;
+
+    expect(response.status).toBe(200);
+    expect(duration).toBeLessThan(200); // Verifica se a resposta é retornada em menos de 200ms
+  });
 });
 
 describe("Teste da Rota listar Item do pedido", () => {
