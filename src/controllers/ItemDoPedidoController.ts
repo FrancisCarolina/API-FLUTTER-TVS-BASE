@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { Produto } from '../models/Produto';
-import { Pedido } from '../models/Pedido';
 import { ItemDoPedido } from '../models/ItemDoPedido';
+import { Pedido } from '../models/Pedido';
+import { Produto } from '../models/Produto';
 
 
 export const listarItensDoPedido = async (req: Request, res: Response) => {
@@ -94,6 +94,10 @@ export const getItemDoPedidoById = async (req: Request, res: Response) => {
         }
     } catch (error) {
         console.error('Erro ao buscar item do pedido:', error);
-        res.status(500).json({ message: 'Erro ao buscar item do pedido' });
+        if(isNaN(+req.params.id)){
+            res.status(400).json({ message: 'Id não é um número' });
+        }else{
+            res.status(500).json({ message: 'Erro ao buscar item do pedido' });
+        }
     }
 };
