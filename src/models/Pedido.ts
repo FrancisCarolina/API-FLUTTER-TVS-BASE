@@ -32,6 +32,3 @@ export const Pedido = sequelize.define<PedidoInstance>('Pedido', {
     tableName: 'pedidos',
     timestamps: false
 });
-
-// Defina a associação corretamente
-Pedido.belongsTo(Cliente, { foreignKey: 'id_cliente' });

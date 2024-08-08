@@ -38,7 +38,3 @@ export const ItemDoPedido = sequelize.define<ItemDoPedidoInstance>('ItemDoPedido
     tableName: 'item_do_pedido',
     timestamps: false
 });
-
-
-ItemDoPedido.belongsTo(Produto, { foreignKey: 'id_produto' });
-ItemDoPedido.belongsTo(Pedido, { foreignKey: 'id_pedido' });
