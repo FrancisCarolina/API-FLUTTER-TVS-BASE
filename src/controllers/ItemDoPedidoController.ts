@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { Cliente } from '../models/Cliente';
 import { ItemDoPedido } from '../models/ItemDoPedido';
 import { Pedido } from '../models/Pedido';
 import { Produto } from '../models/Produto';
@@ -82,17 +83,68 @@ export const excluirItemDoPedido = async (req: Request, res: Response) => {
     }
 };
 
+
 export const getItemDoPedidoById = async (req: Request, res: Response) => {
     try {
         const itemId = parseInt(req.params.id, 10);
-        const itemDoPedido = await ItemDoPedido.findByPk(itemId);
 
+        // Inclua Produto, Pedido e Cliente associados com os aliases corretos
+        const itemDoPedido = await ItemDoPedido.findByPk(itemId, {
+        include: [
+            {
+            model: Produto,
+            as: "Produto", // Use o alias correto aqui
+            attributes: ["id", "descricao"] // Ajuste os atributos conforme necessário
+            },
+            {
+            model: Pedido,
+            as: "Pedido", // Use o alias correto aqui
+            attributes: ["id", "data", "id_cliente"], // Ajuste os atributos conforme necessário
+            include: [
+                {
+                model: Cliente,
+                as: "Cliente", // Use o alias correto aqui
+                attributes: ["id", "nome", "sobrenome", "cpf"] // Ajuste os atributos conforme necessário
+                }
+            ]
+            }
+        ]
+        });
         if (itemDoPedido) {
-            res.json(itemDoPedido);
-        } else {
-            res.status(404).json({ message: 'Item do Pedido não encontrado' });
+        // Formata a resposta para incluir as informações do cliente
+        const respostaFormatada = {
+            itemDoPedido: {
+            id: itemDoPedido.id,
+            qtdade: itemDoPedido.qtdade,
+            produto: itemDoPedido.Produto
+                ? {
+                    id: itemDoPedido.Produto.id,
+                    descricao: itemDoPedido.Produto.descricao
+                }
+                : null,
+            pedido: itemDoPedido.Pedido
+                ? {
+                    id: itemDoPedido.Pedido.id,
+                    data: itemDoPedido.Pedido.data,
+                    cliente: itemDoPedido.Pedido.Cliente
+                    ? {
+                        id: itemDoPedido.Pedido.Cliente.id,
+                        nome: itemDoPedido.Pedido.Cliente.nome,
+                        sobrenome: itemDoPedido.Pedido.Cliente.sobrenome,
+                        cpf: itemDoPedido.Pedido.Cliente.cpf
+                        }
+                    : null
+                }
+                : null
+            }
+        };
+  
+        res.json(respostaFormatada);
+      } else {
+        res.status(404).json({ message: "Item do Pedido não encontrado" });
         }
     } catch (error) {
+
         console.error('Erro ao buscar item do pedido:', error);
         if(isNaN(+req.params.id)){
             res.status(400).json({ message: 'Id não é um número' });

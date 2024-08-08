@@ -1,15 +1,17 @@
 import { Request, Response } from "express";
-import { Produto, ProdutoInstance } from "../models/Produto";
 import { Cliente, ClienteInstance } from "../models/Cliente";
-import { Pedido, PedidoInstance } from "../models/Pedido";
 import { ItemDoPedido } from "../models/ItemDoPedido";
+import { Pedido, PedidoInstance } from "../models/Pedido";
+import { Produto } from "../models/Produto";
 
 export const listarPedidos = async (req: Request, res: Response) => {
   try {
+    
     const pedidos = await Pedido.findAll({
       include: [
         {
           model: Cliente,
+          as: "Cliente"
         },
         {
           model: ItemDoPedido,
@@ -17,6 +19,7 @@ export const listarPedidos = async (req: Request, res: Response) => {
           include: [
             {
               model: Produto,
+              as: "Produto",
               attributes: ["id", "descricao"],
             },
           ],
@@ -52,6 +55,8 @@ export const listarPedidos = async (req: Request, res: Response) => {
     });
 
     res.json({ pedidos: pedidosFormatados });
+
+    console.log("6");
   } catch (error) {
     console.error("Erro ao listar pedidos:", error);
     res.status(500).json({ message: "Erro ao listar pedidos" });

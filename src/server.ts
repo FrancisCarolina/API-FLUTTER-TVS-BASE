@@ -1,7 +1,8 @@
-import express, { Request, Response, ErrorRequestHandler } from "express";
-import path from "path";
-import dotenv from "dotenv";
 import cors from "cors";
+import dotenv from "dotenv";
+import express, { ErrorRequestHandler, Request, Response } from "express";
+import path from "path";
+import "./models/Associations"; // Certifique-se de que o caminho está correto
 import apiRoutes from "./routes/routes";
 
 dotenv.config();

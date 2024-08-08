@@ -57,12 +57,34 @@ describe("Teste da Rota incluirItemDoPedido", () => {
 });
 
 describe("Teste da Rota getItemDoPedidoById", () => {
-  it("Deve retornar o cliente correto quando o id é valido", async () => {
-    const idItem = 1; 
+  it("Deve retornar o item correto quando o id é valido", async () => {
+    const idItem = 1;
     const response = await request(app).get(`/itensDoPedido/${idItem}`);
 
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty("id", idItem);
+    expect(response.body.itemDoPedido).toHaveProperty("id", idItem);
+  });
+
+  it("Deve retornar o cliente correto", async () => {
+    const idItem = 1;
+    const response = await request(app).get(`/itensDoPedido/${idItem}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.itemDoPedido.cliente);
+  });
+  it("Deve retornar o produto correto", async () => {
+    const idItem = 1;
+    const response = await request(app).get(`/itensDoPedido/${idItem}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.itemDoPedido.produto);
+  });
+  it("Deve retornar o pedido correto", async () => {
+    const idItem = 1;
+    const response = await request(app).get(`/itensDoPedido/${idItem}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.itemDoPedido.pedido);
   });
 
   it("Deve retornar um status 404 quando o Id do item nao existe", async () => {
@@ -109,6 +131,7 @@ describe("Teste da Rota listar Item do pedido", () => {
     expect(response.status).toBe(200);
     expect(duration).toBeLessThan(100); // Verifica se a resposta é retornada em menos de 500ms
   });
+  
 });
 
 describe("Teste da Rota excluirItemDoPedido", () => {
