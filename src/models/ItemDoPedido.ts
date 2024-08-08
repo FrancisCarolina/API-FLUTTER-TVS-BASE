@@ -1,6 +1,6 @@
-import { Model, DataTypes } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../instances/mysql';
-import { Pedido, PedidoInstance } from './Pedido';
+import { Pedido } from './Pedido';
 import { Produto, ProdutoInstance } from './Produto';
 
 export interface ItemDoPedidoInstance extends Model {
@@ -40,4 +40,5 @@ export const ItemDoPedido = sequelize.define<ItemDoPedidoInstance>('ItemDoPedido
 });
 
 
-ItemDoPedido.belongsTo(Produto, { foreignKey: 'id_produto' }); 
+ItemDoPedido.belongsTo(Produto, { foreignKey: 'id_produto' });
+ItemDoPedido.belongsTo(Pedido, { foreignKey: 'id_pedido' });
